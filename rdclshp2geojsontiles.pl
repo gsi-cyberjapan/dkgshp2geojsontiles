@@ -7,19 +7,6 @@ use Archive::Zip;
 use Geo::ShapeFile;
 use Data::Dumper;
 
-my $zoom=16;
-
-#刊行データshpのzipの置き場所（この場所以下のzipを検索）
-my $zipdir = 'Y://';
-#shpの仮保存場所
-my $shpdir = 'D://rdclshp/';
-#geojsonの仮保存場所
-my $gjndir = 'D://rdcljson/';
-
-#shpの属性の整理
-my @outproperty = ('rID','lfSpanFr','lfSpanTo','tmpFlg','orgGILvl','ftCode','admCode','devDate','type','rdCtg','state','lvOrder','name','comName','admOfcRd','rnkWidth','Width','sectID','tollSect','medSect','motorway','repLtdLvl','rtCode');
-my %outproperty_num = ('rID' => 0,'lfSpanFr' => 0,'lfSpanTo' => 0,'tmpFlg' => 1,'orgGILvl' => 0,'ftCode' => 0,'admCode' => 0,'devDate' => 0,'type' => 0,'rdCtg' => 0,'state' => 0,'lvOrder' => 1,'name' => 0,'comName' => 0,'admOfcRd' => 0,'rnkWidth' => 0,'Width' => 1,'sectID' => 1,'tollSect' => 0,'medSect' => 1,'motorway' => 1,'repLtdLvl' => 1,'rtCode' => 0);
-
 ## 設定 ##
 ###########################################################################################################
 #出力するgeojson tileのzoomlevelを指定
