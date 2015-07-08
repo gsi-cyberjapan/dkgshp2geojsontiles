@@ -106,7 +106,7 @@ for (1 ..$shapefile->shapes){
      #クリップ判定の前に、線分の最初の点がタイル座標上にある場合の処理（それ以前の点が別タイルかどうか判定）
      if( @LB >0){
       if($tilexy1[0] == int($tilexy1[0]) || $tilexy1[1] == int($tilexy1[1])){
-        print $point[$i-1]->X.",".$point[$i-1]->Y."\n";
+        #print $point[$i-1]->X.",".$point[$i-1]->Y."\n";
         my $flag = 0;
         for (my $ii=0; $ii<@LB; $ii++) {
          $flag = CLIPMAE($LB[$ii]->[0],$LB[$ii]->[1],$tilexy2[0],$tilexy2[1]);
