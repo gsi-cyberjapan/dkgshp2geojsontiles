@@ -13,10 +13,10 @@ http://search.cpan.org/~slaffan/Geo-ShapeFile-2.60/lib/Geo/ShapeFile.pm
 電子国土基本図（数値地図（国土基本情報））の仕様：
 http://www.gsi.go.jp/common/000093949.pdf
 
-## points→geojsontiles
+## points→geojson tiles
 電子国土基本図の注記shp（points）を変換するツール（annoshp2geojsontiles.pl）
 
-## lines→geojsontiles
+## lines→geojson tiles
 電子国土基本図の河川中心線shp（lines）を変換するツール（rvrclshp2geojsontiles.pl）
 
 電子国土基本図の鉄道中心線shp（lines）を変換するツール（railclshp2geojsontiles.pl）
