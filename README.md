@@ -5,7 +5,7 @@
 
 Perlプログラムは、指定したフォルダ内のzipファイル群から指定したshpファイルを取り出し、保存し、ベクトルタイル（geojson tiles）に変換します。
 
-シェープファイルの読み込みにGeo::ShapeFileモジュールを利用しています。
+シェープファイルの読み込みにGeo::ShapeFileモジュールを利用します。
 
 Geo::ShapeFileモジュール：
 http://search.cpan.org/~slaffan/Geo-ShapeFile-2.60/lib/Geo/ShapeFile.pm
