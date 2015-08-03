@@ -303,7 +303,7 @@ my $Y=log(tan(pi/4 + deg2rad($B)/2));
 my $tx=($X + $originShift)/($tileSize * $Resolution);
 my $ty=($Y + $originShift)/($tileSize * $Resolution);
 
-$ty = 2**$zoom - $ty -1;
+$ty = 2**$zoom - $ty;
 
 return ($tx,$ty);
 }
@@ -314,7 +314,7 @@ sub XY2LB {
 my $tx=shift;
 my $ty=shift;
 my $zoom=shift;
-$ty = 2**$zoom - $ty -1;
+$ty = 2**$zoom - $ty;
 
 my $tileSize=256;
 my $initialResolution = 2 * pi() / $tileSize;
@@ -369,9 +369,9 @@ if($X1 != $X2){
  }
 }else{
  if($Y2>$Y1){
-  @LB = sort {$a->[1] <=> $b->[1]} @LB;
- }else{
   @LB = sort {$b->[1] <=> $a->[1]} @LB;
+ }else{
+  @LB = sort {$a->[1] <=> $b->[1]} @LB;
  }
 }
 
