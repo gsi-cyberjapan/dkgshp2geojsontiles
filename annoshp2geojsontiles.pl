@@ -18,9 +18,9 @@ my $shpname = '-Anno-';
 #取り出したshpの置き場所
 my $shpdir = 'D://annoshp/';
 #geojsonのpropertiesへ出力するshpの属性項目の設定
-my @outproperty = ('rID','lfSpanFr','lfSpanTo','tmpFlg','orgGILvl','ftCode','admCode','devDate','annoCtg','knj','kana','arrng','arrngAgl','repPt','gaiji','noChar','charG1','charG2','charG3','charG4','charG5','charG6','charG7','charG8','charG9','charG10','charG11','charG12','charG13','charG14','charG15','charG16','charG17','charG18','charG19','charG20','charG21','charG22');
+my @outproperty = ('class','rID','lfSpanFr','lfSpanTo','tmpFlg','orgGILvl','ftCode','admCode','devDate','annoCtg','knj','kana','arrng','arrngAgl','repPt','gaiji','noChar','charG1','charG2','charG3','charG4','charG5','charG6','charG7','charG8','charG9','charG10','charG11','charG12','charG13','charG14','charG15','charG16','charG17','charG18','charG19','charG20','charG21','charG22');
 #geojsonのpropertiesへ出力するshpの属性項目が文字列か数値かの判別（文字列：0、数値：1）
-my %outproperty_num = ('rID' => 0,'lfSpanFr' => 0,'lfSpanTo' => 0,'tmpFlg' => 1,'orgGILvl' => 0,'ftCode' => 0,'admCode' => 0,'devDate' => 0,'annoCtg' => 0,'knj' => 0,'kana' => 0,'arrng' => 1,'arrngAgl' => 1,'repPt' => 1,'gaiji' => 1,'noChar' => 1,'charG1' => 0,'charG2' => 0,'charG3' => 0,'charG4' => 0,'charG5' => 0,'charG6' => 0,'charG7' => 0,'charG8' => 0,'charG9' => 0,'charG10' => 0,'charG11' => 0,'charG12' => 0,'charG13' => 0,'charG14' => 0,'charG15' => 0,'charG16' => 0,'charG17' => 0,'charG18' => 0,'charG19' => 0,'charG20' => 0,'charG21' => 0,'charG22' => 0);
+my %outproperty_num = ('class' => 0,'rID' => 0,'lfSpanFr' => 0,'lfSpanTo' => 0,'tmpFlg' => 1,'orgGILvl' => 0,'ftCode' => 0,'admCode' => 0,'devDate' => 0,'annoCtg' => 0,'knj' => 0,'kana' => 0,'arrng' => 1,'arrngAgl' => 1,'repPt' => 1,'gaiji' => 1,'noChar' => 1,'charG1' => 0,'charG2' => 0,'charG3' => 0,'charG4' => 0,'charG5' => 0,'charG6' => 0,'charG7' => 0,'charG8' => 0,'charG9' => 0,'charG10' => 0,'charG11' => 0,'charG12' => 0,'charG13' => 0,'charG14' => 0,'charG15' => 0,'charG16' => 0,'charG17' => 0,'charG18' => 0,'charG19' => 0,'charG20' => 0,'charG21' => 0,'charG22' => 0);
 ###########################################################################################################
 
 
@@ -85,6 +85,7 @@ for (1 ..$shapefile->shapes){
     } 
     my $kari="{ \"type\": \"Feature\",\"geometry\": {\"type\": \"Point\", \"coordinates\": [".$L.",".$B."]},\"properties\": {";
     my @karip =();
+    $data{'class'}='Anno';
     foreach my $p (@outproperty){
      if( defined $data{$p} && $data{$p} ne ""){
       $data{$p} = decode('cp932', $data{$p});
@@ -105,7 +106,7 @@ for (1 ..$shapefile->shapes){
     
     $key=LB2XY($L,$B,$zoom);
     if ($tlcnt{$key}) {
-       $tlcnt{$key}=$tlcnt{$key}.",\n".$kari;
+       $tlcnt{$key}=$tlcnt{$key}.",".$kari;
      } else {
        $tlcnt{$key}=$kari;
     }
@@ -123,13 +124,12 @@ foreach my $key (keys(%tlcnt)){
  mkpath("./". @k[0]."/".@k[1]);
  
 open(FOUT,">:utf8","./".$key.".geojson");
+binmode (FOUT);
 flock(FOUT,2);
 print FOUT<<ENDJSON;
-{ "type": "FeatureCollection",
-"features": [
+{ "type": "FeatureCollection","features": [
 $tlcnt{$key}
-]
-}
+]}
 ENDJSON
 close(FOUT);
 }
