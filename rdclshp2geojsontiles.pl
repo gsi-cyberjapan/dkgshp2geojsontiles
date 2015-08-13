@@ -20,9 +20,9 @@ my $shpdir = 'D://rdclshp/';
 #1つのshpごとのgeojson_featuresの置き場所
 my $gjndir = 'D://rdcljson/';
 #geojsonのpropertiesへ出力するshpの属性項目の設定
-my @outproperty = ('rID','lfSpanFr','lfSpanTo','tmpFlg','orgGILvl','ftCode','admCode','devDate','type','rdCtg','state','lvOrder','name','comName','admOfcRd','rnkWidth','Width','sectID','tollSect','medSect','motorway','repLtdLvl','rtCode');
+my @outproperty = ('class','rID','lfSpanFr','lfSpanTo','tmpFlg','orgGILvl','ftCode','admCode','devDate','type','rdCtg','state','lvOrder','name','comName','admOfcRd','rnkWidth','Width','sectID','tollSect','medSect','motorway','repLtdLvl','rtCode');
 #geojsonのpropertiesへ出力するshpの属性項目が文字列か数値かの判別（文字列：0、数値：1）
-my %outproperty_num = ('rID' => 0,'lfSpanFr' => 0,'lfSpanTo' => 0,'tmpFlg' => 1,'orgGILvl' => 0,'ftCode' => 0,'admCode' => 0,'devDate' => 0,'type' => 0,'rdCtg' => 0,'state' => 0,'lvOrder' => 1,'name' => 0,'comName' => 0,'admOfcRd' => 0,'rnkWidth' => 0,'Width' => 1,'sectID' => 1,'tollSect' => 0,'medSect' => 1,'motorway' => 1,'repLtdLvl' => 1,'rtCode' => 0);
+my %outproperty_num = ('class' => 0,'rID' => 0,'lfSpanFr' => 0,'lfSpanTo' => 0,'tmpFlg' => 1,'orgGILvl' => 0,'ftCode' => 0,'admCode' => 0,'devDate' => 0,'type' => 0,'rdCtg' => 0,'state' => 0,'lvOrder' => 1,'name' => 0,'comName' => 0,'admOfcRd' => 0,'rnkWidth' => 0,'Width' => 1,'sectID' => 1,'tollSect' => 0,'medSect' => 1,'motorway' => 1,'repLtdLvl' => 1,'rtCode' => 0);
 ###########################################################################################################
 
 
@@ -86,6 +86,7 @@ for (1 ..$shapefile->shapes){
     my @point = $shape->points;
     my @LB=();
     my @karip =();
+    $data{'class'}='RdCL';
     foreach my $p (@outproperty){
      if( defined $data{$p} && $data{$p} ne ""){
       $data{$p} = decode('cp932', $data{$p});
@@ -125,7 +126,7 @@ for (1 ..$shapefile->shapes){
           }
           $kari=$kari."]},\"properties\": {".join(',', @karip)."}}";
           if ($tlcnt{$key}) {
-           $tlcnt{$key}=$tlcnt{$key}.",\n".$kari;
+           $tlcnt{$key}=$tlcnt{$key}.",".$kari;
           } else {
            $tlcnt{$key}=$kari;
           }
@@ -152,7 +153,7 @@ for (1 ..$shapefile->shapes){
         $kari=$kari."]},\"properties\": {".join(',', @karip)."}}";
         
         if ($tlcnt{$key}) {
-          $tlcnt{$key}=$tlcnt{$key}.",\n".$kari;
+          $tlcnt{$key}=$tlcnt{$key}.",".$kari;
         } else {
          $tlcnt{$key}=$kari;
         }
@@ -176,7 +177,7 @@ for (1 ..$shapefile->shapes){
         $kari=$kari."]},\"properties\": {".join(',', @karip)."}}";
        
        if ($tlcnt{$key}) {
-          $tlcnt{$key}=$tlcnt{$key}.",\n".$kari;
+          $tlcnt{$key}=$tlcnt{$key}.",".$kari;
        } else {
          $tlcnt{$key}=$kari;
        }
@@ -196,6 +197,7 @@ foreach my $key (keys(%tlcnt)){
  mkpath($outdir);
  
 open(FOUT,">:utf8",$outjson);
+binmode (FOUT);
 flock(FOUT,2);
 print FOUT $tlcnt{$key};
 close(FOUT);
@@ -221,10 +223,10 @@ foreach my $key (keys(%tlcntall)){
  mkpath("./". @k[0]."/".@k[1]);
  
 open(FOUT,">","./".$key.".geojson");
+binmode (FOUT);
 flock(FOUT,2);
 print FOUT<<ENDJSON;
-{ "type": "FeatureCollection",
-"features": [
+{ "type": "FeatureCollection","features": [
 ENDJSON
 
 my @fileList= split(/\,/,$tlcntall{$key});
@@ -241,8 +243,7 @@ for(my $i=0; $i<@fileList; $i++){
  if($i != @fileList-1){print FOUT ","}
 }
 print FOUT<<ENDJSON;
-]
-}
+]}
 ENDJSON
 
 close(FOUT);
