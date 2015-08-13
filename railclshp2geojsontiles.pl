@@ -18,9 +18,9 @@ my $shpname = '-RailCL-';
 #取り出したshpの置き場所
 my $shpdir = 'D://railclshp/';
 #geojsonのpropertiesへ出力するshpの属性項目の設定
-my @outproperty = ('rID','lfSpanFr','lfSpanTo','tmpFlg','orgGILvl','ftCode','admCode','devDate','type','snglDbl','railState','lvOrder','staCode','rtCode');
+my @outproperty = ('class','rID','lfSpanFr','lfSpanTo','tmpFlg','orgGILvl','ftCode','admCode','devDate','type','snglDbl','railState','lvOrder','staCode','rtCode');
 #geojsonのpropertiesへ出力するshpの属性項目が文字列か数値かの判別（文字列：0、数値：1）
-my %outproperty_num = ('rID' => 0,'lfSpanFr' => 0,'lfSpanTo' => 0,'tmpFlg' => 1,'orgGILvl' => 0,'ftCode' => 0,'admCode' => 0,'devDate' => 0,'type' => 0,'snglDbl' => 0,'railState' => 0,'lvOrder' => 1,'staCode' => 0,'rtCode' => 0);
+my %outproperty_num = ('class' => 0,'rID' => 0,'lfSpanFr' => 0,'lfSpanTo' => 0,'tmpFlg' => 1,'orgGILvl' => 0,'ftCode' => 0,'admCode' => 0,'devDate' => 0,'type' => 0,'snglDbl' => 0,'railState' => 0,'lvOrder' => 1,'staCode' => 0,'rtCode' => 0);
 ###########################################################################################################
 
 
@@ -82,6 +82,7 @@ for (1 ..$shapefile->shapes){
     my @point = $shape->points;
     my @LB=();
     my @karip =();
+    $data{'class'}='RailCL';
     foreach my $p (@outproperty){
      if( defined $data{$p} && $data{$p} ne ""){
       $data{$p} = decode('cp932', $data{$p});
@@ -121,7 +122,7 @@ for (1 ..$shapefile->shapes){
           }
           $kari=$kari."]},\"properties\": {".join(',', @karip)."}}";
           if ($tlcnt{$key}) {
-           $tlcnt{$key}=$tlcnt{$key}.",\n".$kari;
+           $tlcnt{$key}=$tlcnt{$key}.",".$kari;
           } else {
            $tlcnt{$key}=$kari;
           }
@@ -148,7 +149,7 @@ for (1 ..$shapefile->shapes){
         $kari=$kari."]},\"properties\": {".join(',', @karip)."}}";
         
         if ($tlcnt{$key}) {
-          $tlcnt{$key}=$tlcnt{$key}.",\n".$kari;
+          $tlcnt{$key}=$tlcnt{$key}.",".$kari;
         } else {
          $tlcnt{$key}=$kari;
         }
@@ -172,7 +173,7 @@ for (1 ..$shapefile->shapes){
         $kari=$kari."]},\"properties\": {".join(',', @karip)."}}";
        
        if ($tlcnt{$key}) {
-          $tlcnt{$key}=$tlcnt{$key}.",\n".$kari;
+          $tlcnt{$key}=$tlcnt{$key}.",".$kari;
        } else {
          $tlcnt{$key}=$kari;
        }
@@ -194,13 +195,12 @@ foreach my $key (keys(%tlcnt)){
  mkpath("./". @k[0]."/".@k[1]);
  
 open(FOUT,">:utf8","./".$key.".geojson");
+binmode (FOUT);
 flock(FOUT,2);
 print FOUT<<ENDJSON;
-{ "type": "FeatureCollection",
-"features": [
+{ "type": "FeatureCollection","features": [
 $tlcnt{$key}
-]
-}
+]}
 ENDJSON
 close(FOUT);
 }
